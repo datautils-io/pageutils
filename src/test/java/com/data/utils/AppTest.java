@@ -1,4 +1,4 @@
-package com.datautils.page;
+package com.data.utils;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
