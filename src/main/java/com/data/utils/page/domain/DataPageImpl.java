@@ -1,24 +1,14 @@
 package com.data.utils.page.domain;
 
+import java.util.List;
 import java.util.function.Function;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public class DataPageImpl<T> extends DataChunk<T> implements Page<T> {
 
-  @Override
-  public boolean hasNext() {
-    return false;
-  }
-
-  @Override
-  public Pageable nextOrLastPageable() {
-    return super.nextOrLastPageable();
-  }
-
-  @Override
-  public Pageable previousOrFirstPageable() {
-    return super.previousOrFirstPageable();
+  public DataPageImpl(List<T> content, Pageable pageable) {
+    super(content, pageable);
   }
 
   @Override
@@ -29,6 +19,11 @@ public class DataPageImpl<T> extends DataChunk<T> implements Page<T> {
   @Override
   public long getTotalElements() {
     return 0;
+  }
+
+  @Override
+  public boolean hasNext() {
+    return false;
   }
 
   @Override
