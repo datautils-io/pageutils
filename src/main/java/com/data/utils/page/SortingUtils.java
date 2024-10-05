@@ -14,18 +14,26 @@ public class SortingUtils {
 
     private SortingUtils() {}
 
+    public static <T> List<T> sort(List<T> list, Pageable pageable) {
+        return sortList(list, pageable, "_");
+    }
+
+    public static <T> List<T> sort(List<T> list, Pageable pageable, String separator) {
+        return sortList(list, pageable, separator);
+    }
+
     /**
      * Sorts the given list of objects using the specified sort orders.
      *
      * @param list the list of objects to sort
-     * @param orders the sort orders to apply
+     * @param separator the separator by which nested object are seperated in Pageable.Sort
      * @param <T> the type of the objects in the list
      * @return a sorted list of objects
      */
-    public static <T> List<T> sortList(List<T> list, Pageable pageable) {
+    private static <T> List<T> sortList(List<T> list, Pageable pageable, String separator) {
         List<T> copy = new ArrayList<>(list);
         List<Sort.Order> orders = pageable.getSort().get().toList();
-        Comparator<T> comparator = createComparator(orders);
+        Comparator<T> comparator = createComparator(orders, separator);
         copy.sort(comparator);
         return copy;
     }
@@ -37,14 +45,14 @@ public class SortingUtils {
      * @param <T> the type of the objects in the list
      * @return A Comparator that can be used to sort the list of objects
      */
-    private static <T> Comparator<T> createComparator(List<Sort.Order> orders) {
+    private static <T> Comparator<T> createComparator(List<Sort.Order> orders, String separator) {
         return (o1, o2) -> {
             for (Sort.Order order : orders) {
                 String sortField = order.getProperty();
                 Sort.Direction direction = order.getDirection();
 
-                Object value1 = getFlattenedValue(o1, sortField);
-                Object value2 = getFlattenedValue(o2, sortField);
+                Object value1 = getFlattenedValue(o1, sortField, separator);
+                Object value2 = getFlattenedValue(o2, sortField, separator);
 
                 int comparisonResult = compareValues(value1, value2, direction);
                 if (comparisonResult != 0) {
@@ -71,8 +79,8 @@ public class SortingUtils {
         return 0; // Fallback if not comparable
     }
 
-    private static Object getFlattenedValue(Object obj, String sortField) {
-        String[] keys = sortField.split("_");
+    private static Object getFlattenedValue(Object obj, String sortField, String separator) {
+        String[] keys = sortField.split(separator);
         Object currentObj = obj;
 
         for (String key : keys) {
