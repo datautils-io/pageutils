@@ -4,7 +4,6 @@ import com.data.utils.page.SortingUtils;
 import java.util.List;
 import java.util.function.Function;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 public class DataPageImpl<T> extends DataChunk<T> implements Page<T> {
@@ -35,12 +34,12 @@ public class DataPageImpl<T> extends DataChunk<T> implements Page<T> {
     super(content, pageable);
 
     this.total =
-            pageable
-                    .toOptional()
-                    .filter(it -> !content.isEmpty())
-                    .filter(it -> it.getOffset() + it.getPageSize() > total)
-                    .map(it -> it.getOffset() + content.size())
-                    .orElse(total);
+        pageable
+            .toOptional()
+            .filter(it -> !content.isEmpty())
+            .filter(it -> it.getOffset() + it.getPageSize() > total)
+            .map(it -> it.getOffset() + content.size())
+            .orElse(total);
 
     this.sortSeparator = sortSeparator;
   }
@@ -67,11 +66,10 @@ public class DataPageImpl<T> extends DataChunk<T> implements Page<T> {
 
   @Override
   public <U> Page<U> map(Function<? super T, ? extends U> converter) {
-    return new PageImpl<>(getConvertedContent(converter), getPageable(), total);
+    return new DataPageImpl<>(getConvertedContent(converter), getPageable(), total);
   }
 
-  public DataPageImpl<T> sort() {
-    List<T> sortedContent = SortingUtils.sort(getContent(), super.getPageable(), sortSeparator);
-    return new DataPageImpl<>(sortedContent, getPageable(), total);
+  public void sort() {
+    super.updateContent(SortingUtils.sort(getContent(), getPageable(), sortSeparator));
   }
 }
