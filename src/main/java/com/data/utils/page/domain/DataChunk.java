@@ -91,4 +91,9 @@ public abstract class DataChunk<T> implements Slice<T>, Serializable {
   public <U> List<U> getConvertedContent(Function<? super T, ? extends U> converter) {
     return this.stream().map(converter).collect(Collectors.toList());
   }
+
+  public void updateContent(List<T> newContent) {
+    content.clear();
+    content.addAll(newContent);
+  }
 }

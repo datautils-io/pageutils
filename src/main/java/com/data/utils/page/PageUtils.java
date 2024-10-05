@@ -48,7 +48,7 @@ public class PageUtils {
 
     if (start >= list.size()) return Page.empty();
 
-    List<T> sortedList = SortingUtils.sortList(list, pageable);
+    List<T> sortedList = SortingUtils.sort(list, pageable);
 
     return new PageImpl<>(sortedList.subList(start, end), pageable, sortedList.size());
   }
@@ -76,7 +76,7 @@ public class PageUtils {
 
     if (start >= list.size()) return Page.empty();
 
-    List<T> sortedList = SortingUtils.sortList(list, pageable);
+    List<T> sortedList = SortingUtils.sort(list, pageable);
 
     boolean hasNext = end < sortedList.size();
 
