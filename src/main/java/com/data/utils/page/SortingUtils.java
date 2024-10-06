@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -13,16 +17,15 @@ public class SortingUtils {
 
   private SortingUtils() {}
 
+  private static final ConcurrentHashMap<Class<?>, Map<String, UnaryOperator<Object>>>
+      FLATTENED_VALUE_CACHE = new ConcurrentHashMap<>();
+
   public static <T> List<T> sort(List<T> list, Pageable pageable) {
     return sortList(list, pageable, "_");
   }
 
   public static <T> List<T> sort(List<T> list, Pageable pageable, String separator) {
     return sortList(list, pageable, separator);
-  }
-
-  public static <T> Comparator<T> createComparator(Pageable pageable, String separator) {
-    return createComparator(pageable.getSort().get().toList(), separator);
   }
 
   /**
@@ -34,9 +37,11 @@ public class SortingUtils {
    * @return a sorted list of objects
    */
   private static <T> List<T> sortList(List<T> list, Pageable pageable, String separator) {
+
     List<T> copy = new ArrayList<>(list);
+
     List<Sort.Order> orders = pageable.getSort().get().toList();
-    Comparator<T> comparator = createComparator(orders, separator);
+    Comparator<T> comparator = createComparator(orders, separator, list.get(0));
     copy.sort(comparator);
     return copy;
   }
@@ -48,14 +53,22 @@ public class SortingUtils {
    * @param <T> the type of the objects in the list
    * @return A Comparator that can be used to sort the list of objects
    */
-  private static <T> Comparator<T> createComparator(List<Sort.Order> orders, String separator) {
+  @SuppressWarnings("unchecked")
+  private static <T> Comparator<T> createComparator(
+      List<Sort.Order> orders, String separator, T object) {
+
+    if (object instanceof Comparable<?>) {
+      return (o1, o2) -> ((Comparable<T>) o1).compareTo(o2);
+    }
+
     return (o1, o2) -> {
       for (Sort.Order order : orders) {
         String sortField = order.getProperty();
         Sort.Direction direction = order.getDirection();
 
-        Object value1 = getFlattenedValue(o1, sortField, separator);
-        Object value2 = getFlattenedValue(o2, sortField, separator);
+        UnaryOperator<Object> valueGetter = getFlattenedValueGetter(object.getClass(), sortField, separator);
+        Object value1 = valueGetter.apply(o1);
+        Object value2 = valueGetter.apply(o2);
 
         int comparisonResult = compareValues(value1, value2, direction);
         if (comparisonResult != 0) {
@@ -80,6 +93,13 @@ public class SortingUtils {
       return (direction == Sort.Direction.ASC) ? result : -result;
     }
     return 0; // Fallback if not comparable
+  }
+
+  private static UnaryOperator<Object> getFlattenedValueGetter(
+      Class<?> clazz, String sortField, String separator) {
+    return FLATTENED_VALUE_CACHE
+        .computeIfAbsent(clazz, c -> new ConcurrentHashMap<>())
+        .computeIfAbsent(sortField, sf -> obj -> getFlattenedValue(obj, sf, separator));
   }
 
   private static Object getFlattenedValue(Object obj, String sortField, String separator) {
