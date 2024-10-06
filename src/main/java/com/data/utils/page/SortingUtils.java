@@ -1,14 +1,11 @@
 package com.data.utils.page;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -38,12 +35,11 @@ public class SortingUtils {
    */
   private static <T> List<T> sortList(List<T> list, Pageable pageable, String separator) {
 
-    List<T> copy = new ArrayList<>(list);
-
     List<Sort.Order> orders = pageable.getSort().get().toList();
+
     Comparator<T> comparator = createComparator(orders, separator, list.get(0));
-    copy.sort(comparator);
-    return copy;
+
+    return list.stream().sorted(comparator).toList();
   }
 
   /**
@@ -66,7 +62,8 @@ public class SortingUtils {
         String sortField = order.getProperty();
         Sort.Direction direction = order.getDirection();
 
-        UnaryOperator<Object> valueGetter = getFlattenedValueGetter(object.getClass(), sortField, separator);
+        UnaryOperator<Object> valueGetter =
+            getFlattenedValueGetter(object.getClass(), sortField, separator);
         Object value1 = valueGetter.apply(o1);
         Object value2 = valueGetter.apply(o2);
 
