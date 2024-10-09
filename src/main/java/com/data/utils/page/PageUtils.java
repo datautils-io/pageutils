@@ -13,11 +13,21 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.util.CollectionUtils;
 
-/** Utility class for {@link Page} object. */
+/**
+ * Utility class for handling pagination and sorting operations with {@link Page} and {@link Slice} objects.
+ * This class provides methods to convert lists of objects into paginated and sorted {@link Page} and {@link Slice} objects,
+ * as well as to update {@link Pageable} objects based on provided sort mappings.
+ */
 public class PageUtils {
 
   private PageUtils() {}
 
+  /**
+   * Calculates the limit for pagination based on the given Pageable object.
+   *
+   * @param pageable the Pageable object containing pagination information
+   * @return the limit for the current page
+   */
   public static int getLimit(Pageable pageable) {
     int pageNumber = pageable.getPageNumber();
     int pageSize = pageable.getPageSize();
@@ -26,11 +36,12 @@ public class PageUtils {
   }
 
   /**
-   * Converts the given list of objects to a {@link Page} object, using the given {@link Pageable}
+   * Converts the given list of objects to a {@link Page} object, using the specified {@link Pageable}
    * object for pagination and sorting.
    *
    * @param list the list of objects to include in the page
    * @param pageable the {@link Pageable} object containing the pagination and sort criteria
+   * @param <T> the type of the objects in the list
    * @return a {@link Page} object with the specified page size, page number, and sorting criteria
    */
   public static <T> Page<T> toPage(List<T> list, Pageable pageable) {
@@ -54,11 +65,12 @@ public class PageUtils {
   }
 
   /**
-   * Converts the given list of objects to a {@link Slice} object, using the given {@link Pageable}
+   * Converts the given list of objects to a {@link Slice} object, using the specified {@link Pageable}
    * object for pagination and sorting.
    *
    * @param list the list of objects to include in the slice
    * @param pageable the {@link Pageable} object containing the pagination and sort criteria
+   * @param <T> the type of the objects in the list
    * @return a {@link Slice} object with the specified page size, page number, and sorting criteria
    */
   public static <T> Slice<T> toSlice(List<T> list, Pageable pageable) {
