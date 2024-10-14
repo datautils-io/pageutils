@@ -38,7 +38,8 @@ public class SortingUtils {
    *
    * @param list the list of objects to sort
    * @param pageable the Pageable object containing sort information
-   * @param separator the separator by which nested objects are separated in {@link Pageable#getSort()}
+   * @param separator the separator by which nested objects are separated in {@link
+   *     Pageable#getSort()}
    * @param <T> the type of the objects in the list
    * @return a sorted list of objects
    */
@@ -51,7 +52,8 @@ public class SortingUtils {
    *
    * @param list the list of objects to sort
    * @param pageable the Pageable object containing sort information
-   * @param separator the separator by which nested objects are separated in {@link Pageable#getSort()}
+   * @param separator the separator by which nested objects are separated in {@link
+   *     Pageable#getSort()}
    * @param <T> the type of the objects in the list
    * @return a sorted list of objects
    */

@@ -12,8 +12,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 
 /**
- * Abstract class representing a chunk of data with pagination and sorting capabilities.
- * This class provides a common interface for handling lists of data in a paginated manner.
+ * Abstract class representing a chunk of data with pagination and sorting capabilities. This class
+ * provides a common interface for handling lists of data in a paginated manner.
  *
  * @param <T> the type of elements in this data chunk
  */
@@ -166,11 +166,10 @@ public abstract class DataChunk<T> implements Slice<T>, Serializable {
   }
 
   /**
-   * Converts the content of this data chunk to a new type using the provided
-   * converter function.
+   * Converts the content of this data chunk to a new type using the provided converter function.
    *
    * @param converter the function to convert elements of type T to type U
-   * @param <U>       the type of elements in the new data chunk
+   * @param <U> the type of elements in the new data chunk
    * @return a new DataChunkImpl containing the converted content
    */
   public <U> List<U> getConvertedContent(Function<? super T, ? extends U> converter) {
