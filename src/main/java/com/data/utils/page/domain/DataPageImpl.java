@@ -7,9 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 /**
- * Implementation of the {@link Page} interface that represents a paginated list of data.
- * This class provides additional functionality for handling pagination, sorting, and mapping
- * of content within a page.
+ * Implementation of the {@link Page} interface that represents a paginated list of data. This class
+ * provides additional functionality for handling pagination, sorting, and mapping of content within
+ * a page.
  *
  * @param <T> the type of elements in this page
  */
@@ -22,7 +22,8 @@ public class DataPageImpl<T> extends DataChunk<T> implements Page<T> {
   private final String sortSeparator;
 
   /**
-   * Constructs a new DataPageImpl with the specified content, pageable information, and total count.
+   * Constructs a new DataPageImpl with the specified content, pageable information, and total
+   * count.
    *
    * @param content the content of the page
    * @param pageable the pageable information for the page
@@ -75,7 +76,8 @@ public class DataPageImpl<T> extends DataChunk<T> implements Page<T> {
   }
 
   /**
-   * Returns the total number of pages available based on the total number of elements and the size of the page.
+   * Returns the total number of pages available based on the total number of elements and the size
+   * of the page.
    *
    * @return the total number of pages
    */
@@ -115,7 +117,8 @@ public class DataPageImpl<T> extends DataChunk<T> implements Page<T> {
   }
 
   /**
-   * Maps the content of this page to a new page of a different type using the provided converter function.
+   * Maps the content of this page to a new page of a different type using the provided converter
+   * function.
    *
    * @param converter the function to convert elements of type T to type U
    * @param <U> the type of elements in the new page
@@ -126,9 +129,7 @@ public class DataPageImpl<T> extends DataChunk<T> implements Page<T> {
     return new DataPageImpl<>(getConvertedContent(converter), getPageable(), total);
   }
 
-  /**
-   * Sorts the content of this page using the specified sorting utility.
-   */
+  /** Sorts the content of this page using the specified sorting utility. */
   public void sort() {
     super.updateContent(SortingUtils.sort(getContent(), getPageable(), sortSeparator));
   }

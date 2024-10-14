@@ -14,9 +14,10 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.util.CollectionUtils;
 
 /**
- * Utility class for handling pagination and sorting operations with {@link Page} and {@link Slice} objects.
- * This class provides methods to convert lists of objects into paginated and sorted {@link Page} and {@link Slice} objects,
- * as well as to update {@link Pageable} objects based on provided sort mappings.
+ * Utility class for handling pagination and sorting operations with {@link Page} and {@link Slice}
+ * objects. This class provides methods to convert lists of objects into paginated and sorted {@link
+ * Page} and {@link Slice} objects, as well as to update {@link Pageable} objects based on provided
+ * sort mappings.
  */
 public class PageUtils {
 
@@ -36,8 +37,8 @@ public class PageUtils {
   }
 
   /**
-   * Converts the given list of objects to a {@link Page} object, using the specified {@link Pageable}
-   * object for pagination and sorting.
+   * Converts the given list of objects to a {@link Page} object, using the specified {@link
+   * Pageable} object for pagination and sorting.
    *
    * @param list the list of objects to include in the page
    * @param pageable the {@link Pageable} object containing the pagination and sort criteria
@@ -65,8 +66,8 @@ public class PageUtils {
   }
 
   /**
-   * Converts the given list of objects to a {@link Slice} object, using the specified {@link Pageable}
-   * object for pagination and sorting.
+   * Converts the given list of objects to a {@link Slice} object, using the specified {@link
+   * Pageable} object for pagination and sorting.
    *
    * @param list the list of objects to include in the slice
    * @param pageable the {@link Pageable} object containing the pagination and sort criteria
